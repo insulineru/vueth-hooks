@@ -1,22 +1,16 @@
 <script lang="ts">
 import { defineComponent, provide, reactive, readonly, toRefs } from 'vue'
 import type { Web3Provider } from '@ethersproject/providers'
-import { EthersProviderStateSymbol, EthersProviderUpdateSymbol } from './constants'
+import { ethers } from 'ethers'
+import { EthersProviderInitSymbol, EthersProviderStateSymbol, EthersProviderUpdateSymbol } from './constants'
+import type { IEthersProviderState } from './EthersProvider.types'
 
-export type IEthersProviderState = {
-  provider: Web3Provider | null
-  isConnected: boolean
-  isLoading: boolean
-}
-
-export type IEthersProviderUpdate = (newState: Partial<IEthersProviderState>) => void
 export default defineComponent({
   setup() {
     const state = reactive<IEthersProviderState>({
       provider: null,
       isConnected: false,
       isLoading: false,
-
     })
 
     provide(EthersProviderStateSymbol, toRefs(readonly(state)))
@@ -32,6 +26,28 @@ export default defineComponent({
       })
     }
     provide(EthersProviderUpdateSymbol, update)
+
+    const init = async () => {
+      update({ isLoading: true })
+      try {
+        const { default: Web3Modal } = await import('web3modal')
+
+        const config = new Web3Modal({
+          network: 'mainnet', // optional
+          cacheProvider: true,
+          providerOptions: {},
+        })
+        const instance = await config.connect()
+
+        const provider = new ethers.providers.Web3Provider(instance)
+        update({ provider, isConnected: true, isLoading: false })
+      }
+      catch (error) {
+        console.error(error)
+        update({ isLoading: false })
+      }
+    }
+    provide(EthersProviderInitSymbol, init)
   },
 })
 </script>
