@@ -1,7 +1,8 @@
 {
   "name": "vueth-hooks",
+  "version": "0.0.1",
   "private": true,
-  "version": "0.0.0",
+  "author": "Aleksey Lisun (@insulineru)",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -10,13 +11,17 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "vue": "^3.2.25"
+    "ethers": "^5.6.9",
+    "vue": "^3.2.25",
+    "web3modal": "^1.9.8"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",
     "@ethersproject/providers": "^5.6.8",
+    "@types/node": "^18.0.0",
     "@vitejs/plugin-vue": "^2.3.3",
-    "eslint": "^8.17.0",
+    "eslint": "^8.18.0",
+    "rollup-plugin-polyfill-node": "^0.9.0",
     "typescript": "^4.5.4",
     "vite": "^2.9.9",
     "vue-tsc": "^0.34.7"
