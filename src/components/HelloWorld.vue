@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue'
-import { EthersProviderStateSymbol, EthersProviderUpdateSymbol } from '../lib/provider/constants'
-import type { IEthersProviderState, IEthersProviderUpdate } from '../lib/provider/EthersProvider.vue'
+import { useInit } from '../lib/hooks/'
+import { EthersProviderStateSymbol } from '../lib/provider/constants'
+import type { IEthersProviderState } from '../lib/provider/EthersProvider.types'
 
 defineProps<{ msg: string }>()
+// Define vueth-hooks state
 const { isConnected } = inject(EthersProviderStateSymbol) as IEthersProviderState
-const updateEthersProvider = inject(EthersProviderUpdateSymbol) as IEthersProviderUpdate
-const updateIsConnected = (value: boolean) => updateEthersProvider?.({ isConnected: value })
-const count = ref(0)
+
+const { init } = useInit()
+
+const connect = () => {
+  init()
+}
 </script>
 
 <template>
@@ -30,13 +35,13 @@ const count = ref(0)
     <a href="https://v3.vuejs.org/" target="_blank">Vue 3 Docs</a>
   </p>
 
-  <button type="button" @click="updateIsConnected(!isConnected)">
-    count is: {{ count }}
-  </button>
   <p>
-    Edit
-    <code>components/HelloWorld.vue</code> to test hot module replacement {{ isConnected }}.
+    <code>isConnected: {{ isConnected }}</code>.
   </p>
+
+  <button type="button" @click="connect">
+    Let's go!
+  </button>
 </template>
 
 <style scoped>
