@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue'
 import { useInit } from '../lib/hooks/'
+import type { TEthersContext } from '../lib/models/ethersAppContextTypes'
 import { EthersProviderStateSymbol } from '../lib/providers/constants'
-import type { IEthersProviderState } from '../lib/providers/EthersProvider.types'
 
 defineProps<{ msg: string }>()
 // Define vueth-hooks state
-const { isConnected } = inject(EthersProviderStateSymbol) as IEthersProviderState
+const { isConnected } = inject(EthersProviderStateSymbol) as TEthersContext
 
 const { init } = useInit()
 

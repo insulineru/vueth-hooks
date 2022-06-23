@@ -2,27 +2,29 @@
 import { defineComponent, provide, reactive, readonly, toRefs } from 'vue'
 import { ethers } from 'ethers'
 import { useQueryProvider } from 'vue-query'
+import type { TEthersContext } from '../models/ethersAppContextTypes'
 import { EthersProviderInitSymbol, EthersProviderStateSymbol, EthersProviderUpdateSymbol } from './constants'
-import type { IEthersProviderState } from './EthersProvider.types'
 
 export default defineComponent({
   setup() {
     useQueryProvider()
 
-    const state = reactive<IEthersProviderState>({
-      provider: null,
+    const state = reactive<TEthersContext>({
+      provider: undefined,
       isConnected: false,
       isLoading: false,
+      account: undefined,
+      chainId: undefined,
     })
 
     provide(EthersProviderStateSymbol, toRefs(readonly(state)))
 
-    const update = (updates: Partial<IEthersProviderState>) => {
+    const update = (updates: Partial<TEthersContext>) => {
       const res = { ...state, ...updates }
 
       // set updates to state and trigger update
       Object.keys(updates).forEach((key) => {
-        const typedKey = key as keyof IEthersProviderState
+        const typedKey = key as keyof TEthersContext
         // @ts-expect-error TODO: fix this
         state[typedKey] = res[typedKey]
       })
