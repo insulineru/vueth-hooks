@@ -1,12 +1,14 @@
 <script lang="ts">
 import { defineComponent, provide, reactive, readonly, toRefs } from 'vue'
-import type { Web3Provider } from '@ethersproject/providers'
 import { ethers } from 'ethers'
+import { useQueryProvider } from 'vue-query'
 import { EthersProviderInitSymbol, EthersProviderStateSymbol, EthersProviderUpdateSymbol } from './constants'
 import type { IEthersProviderState } from './EthersProvider.types'
 
 export default defineComponent({
   setup() {
+    useQueryProvider()
+
     const state = reactive<IEthersProviderState>({
       provider: null,
       isConnected: false,
