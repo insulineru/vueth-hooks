@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue'
 import { useInit } from '../lib/hooks/'
-import { EthersProviderStateSymbol } from '../lib/provider/constants'
-import type { IEthersProviderState } from '../lib/provider/EthersProvider.types'
+import { EthersProviderStateSymbol } from '../lib/providers/constants'
+import type { IEthersProviderState } from '../lib/providers/EthersProvider.types'
 
 defineProps<{ msg: string }>()
 // Define vueth-hooks state

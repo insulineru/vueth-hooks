@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
-import EthersProvider from './lib/provider/EthersProvider.vue'
+import { EthersProvider } from './lib/providers'
 </script>
 
 <template>
