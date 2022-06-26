@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
 import { EthersProvider } from './lib/providers'
+import BlockNumberProvider from './lib/providers/BlockNumberProvider.vue'
 </script>
 
 <template>
   <EthersProvider>
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Hello Vue 3 + Vueth-hooks + TypeScript + Vite +" />
+    <BlockNumberProvider>
+      <img alt="Vue logo" src="./assets/logo.png">
+      <HelloWorld msg="Hello Vue 3 + Vueth-hooks + TypeScript + Vite +" />
+    </BlockNumberProvider>
   </EthersProvider>
 </template>
 

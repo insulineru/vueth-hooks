@@ -2,12 +2,13 @@
 import { inject, ref } from 'vue'
 import { useInit } from '../lib/hooks/'
 import type { TEthersContext } from '../lib/models/ethersAppContextTypes'
-import { EthersProviderStateSymbol } from '../lib/providers/constants'
+import type { TBlockNumberContext } from '../lib/providers/BlockNumberProvider.types'
+import { BlockNumberProviderSymbol, EthersProviderStateSymbol } from '../lib/providers/constants'
 
 defineProps<{ msg: string }>()
 // Define vueth-hooks state
-const { isConnected } = inject(EthersProviderStateSymbol) as TEthersContext
-
+const { isConnected, chainId } = inject(EthersProviderStateSymbol) as TEthersContext
+const blockNumber = inject(BlockNumberProviderSymbol) as TBlockNumberContext
 const { init } = useInit()
 
 const connect = () => {
@@ -37,6 +38,9 @@ const connect = () => {
 
   <p>
     <code>isConnected: {{ isConnected }}</code>.
+  </p>
+  <p v-if="chainId">
+    <code>Block number on {{ chainId }}: {{ blockNumber }}</code>.
   </p>
 
   <button type="button" @click="connect">
