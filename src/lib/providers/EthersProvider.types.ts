@@ -1,10 +1,12 @@
 import type { Web3Provider } from '@ethersproject/providers'
 
-export type IEthersProviderState = {
+export type TEthersProviderState = {
   provider: Web3Provider | null
   isConnected: boolean
   isLoading: boolean
+  account?: string
+  chainId?: number
 }
 
-export type IEthersProviderUpdate = (newState: Partial<IEthersProviderState>) => void
-export type IEthersProviderInit = () => Promise<void>
+export type TEthersProviderUpdate = (newState: Partial<TEthersProviderState>) => void
+export type TEthersProviderInit = () => Promise<void>
