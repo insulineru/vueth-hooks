@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { inject, ref } from 'vue'
-import { useInit } from '../lib/hooks/'
-import type { TEthersContext } from '../lib/models/ethersAppContextTypes'
-import type { TBlockNumberContext } from '../lib/providers/BlockNumberProvider.types'
-import { BlockNumberProviderSymbol, EthersProviderStateSymbol } from '../lib/providers/constants'
+import { formatEther } from 'ethers/lib/utils'
+import { useBalance, useBlockNumberContext, useEthersAppContext, useInit } from '../lib/hooks/'
 
 defineProps<{ msg: string }>()
 // Define vueth-hooks state
-const { isConnected, chainId } = inject(EthersProviderStateSymbol) as TEthersContext
-const blockNumber = inject(BlockNumberProviderSymbol) as TBlockNumberContext
+const { isConnected, chainId, account } = useEthersAppContext()
+const blockNumber = useBlockNumberContext()
 const { init } = useInit()
 
 const connect = () => {
   init()
 }
+
+const [yourLocalBalance] = useBalance(account, { blockNumberInterval: 10 })
 </script>
 
 <template>
@@ -41,6 +40,9 @@ const connect = () => {
   </p>
   <p v-if="chainId">
     <code>Block number on {{ chainId }}: {{ blockNumber }}</code>.
+  </p>
+  <p v-if="isConnected">
+    <code>{{ account }} balance is {{ formatEther(yourLocalBalance) }}</code>.
   </p>
 
   <button type="button" @click="connect">
