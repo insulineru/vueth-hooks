@@ -1,5 +1,7 @@
+import { merge } from 'merge-anything'
 import { invariant } from 'ts-invariant'
-import type { TUpdateOptions } from '../models'
+import type { DeepPartial, TQueryOptions, TUpdateOptions } from '../models'
+import { defaultUpdateOptions } from '../models'
 
 /**
  * #### Summary
@@ -25,4 +27,35 @@ export const checkUpdateOptions = (update: TUpdateOptions): void => {
   else {
     invariant(update.blockNumberInterval > 0, 'Invalid blockNumberInterval, must be greater than 0')
   }
+}
+
+export const mergeDefaultUpdateOptions = <GResult = any>(
+  ...overrides: DeepPartial<TUpdateOptions<GResult>>[]
+): TUpdateOptions<GResult> => {
+  const mergedOverrides = merge({}, ...overrides) as TUpdateOptions<GResult>
+  const defaultOptions: TUpdateOptions = defaultUpdateOptions()
+
+  if (overrides?.length > 0) {
+    // since check passed on overrides, if polling is enabled, then blockNumberInterval must have been disabled
+    if (mergedOverrides.refetchInterval) {
+      checkUpdateOptions(mergedOverrides)
+      defaultOptions.blockNumberInterval = undefined
+    }
+    return merge(defaultOptions, mergedOverrides)
+  }
+
+  return defaultOptions
+}
+
+export const processQueryOptions = <GResult>(
+  options: TUpdateOptions<GResult>,
+): typeof options.query & { refetchInterval?: number } => {
+  checkUpdateOptions(options)
+
+  const queryOptions: TQueryOptions<GResult> & { refetchInterval?: number } = { ...options.query }
+  if (options.refetchInterval) {
+    queryOptions.enabled = true
+    queryOptions.refetchInterval = options.refetchInterval
+  }
+  return queryOptions
 }
