@@ -1,3 +1,4 @@
+import type { Ref } from 'vue'
 import { computed, watch } from 'vue'
 import { checkUpdateOptions } from '../functions'
 import type { TUpdateOptions } from '../models'
@@ -12,21 +13,21 @@ import type { TUpdateOptions } from '../models'
  * @param allowBlockNumberUpdate Boolean of if updating using this hook is allowed
  */
 export function useEthersUpdater(
-  update: (() => void) | (() => Promise<void>),
-  blockNumber: number | undefined,
+  update: Ref<(() => void) | (() => Promise<void>)>,
+  blockNumber: Ref<number | undefined>,
   options: TUpdateOptions,
   allowBlockNumberUpdate = true,
 ): void {
   checkUpdateOptions(options)
 
   // number that only increases every (X * options.blockNumberInterval) blocks
-  const blockNumberFilter = computed(() => Math.floor((blockNumber ?? 0) / (options.blockNumberInterval ?? 1)))
+  const blockNumberFilter = computed(() => Math.floor((blockNumber.value ?? 0) / (options.blockNumberInterval ?? 1)))
 
   watch([blockNumberFilter, update, options.refetchInterval], () => {
     if (allowBlockNumberUpdate) {
       // update if blocknumber or if polling
-      if (blockNumber != null && !options.refetchInterval)
-        update()
+      if (blockNumber.value != null && !options.refetchInterval)
+        update.value()
     }
   }, {
     immediate: true,
